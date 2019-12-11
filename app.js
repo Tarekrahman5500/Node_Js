@@ -1,14 +1,35 @@
-const express = require('express');
-const  app = express();
-const mongoose = require('mongoose');
-app.get('/',(req,res) =>
-{
-    res.send("We are Start again");
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const bodyparser = require('body-parser');
 
-});
-app.get('/posts',(req,res) =>
-{
-    res.send("We are posts again");
+app.use(bodyparser.json());
 
+
+require('dotenv/config');
+
+const postsRout = require('./routes/posts');
+
+
+app.use('/posts', postsRout);
+
+
+app.get('/', (req, res) => {
+    res.send("Home coming");
 });
-app.listen(300);
+
+
+mongoose.connect(
+    process.env.DB_CONNECTION
+    , {useNewUrlParser: true}
+    , () => {
+        console.log('Connected to DB');
+    });
+
+app.listen(300, function (err) {
+    if (err) {
+        throw err
+    }
+
+    console.log('Server started on port 300')
+});
